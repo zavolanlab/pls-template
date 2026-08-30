@@ -6,6 +6,8 @@ on installation.
 `ruff` is reported as a warning rather than a failure: it is in `environment.yml` and you will
 need it from Week 5, so a warning here means your environment was not built from that file.
 """
+import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -51,12 +53,35 @@ def main():
             print(f"[FAIL] cannot import {mod}")
             problems.append(f"package missing: {mod}")
 
+    # Your own package, installed editable. Until `pip install -e .` has been run, your code is
+    # importable only from this directory, and your tests will not find it from anywhere else.
+    # Read the name with a regex rather than tomllib: this script has to survive being run on
+    # the wrong Python, and tomllib only exists from 3.11.
+    name = None
+    try:
+        m = re.search(r'^name\s*=\s*"([^"]+)"', pathlib.Path("pyproject.toml").read_text(), re.M)
+        name = m.group(1) if m else None
+    except OSError:
+        print("[WARN] no pyproject.toml here — are you in the project root?")
+    if name in (None, "REPLACE-ME"):
+        if name == "REPLACE-ME":
+            print("[WARN] pyproject.toml: name is still REPLACE-ME — set it to your package")
+    else:
+        module = name.replace("-", "_")
+        try:
+            __import__(module)
+            print(f"[PASS] import {module} (your package, installed)")
+        except ImportError:
+            print(f"[FAIL] cannot import {module} — your package is not installed")
+            problems.append(f"your own package is not installed: run  pip install -e .")
+
     print()
     if problems:
         print("NOT READY. Fix these before the session:")
         for p in problems:
             print(f"  - {p}")
         print("\nMost of them are fixed by:  conda env create -f environment.yml")
+        print("and, for your own package:      pip install -e .")
         sys.exit(1)
     print("READY. Bring your laptop and your questions.")
 

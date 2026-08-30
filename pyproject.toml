@@ -1,0 +1,26 @@
+# What makes your own code importable.
+#
+# Run this once, after creating the conda environment:
+#
+#     pip install -e .
+#
+# From then on `from tissue_sim.geometry import place_cells` works anywhere on your machine,
+# instead of only when you happen to be standing in this directory. The -e ("editable") means
+# the install points at your source: edit a file and the change takes effect immediately, with
+# no reinstall.
+#
+# Week 14 comes back to this file and fills in the rest — dependencies, licence, a real version,
+# and a command you can type. For now it needs only enough to identify the package.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "REPLACE-ME"          # your package: tissue-sim or spatial-decode
+version = "0.1.0"
+requires-python = ">=3.11"
+
+# Your code lives in src/<package>/, so that is where setuptools is told to look.
+[tool.setuptools.packages.find]
+where = ["src"]
