@@ -18,7 +18,12 @@
 ```bash
 conda env create -f environment.yml
 conda activate pls2026
+pip install -e .
 ```
+
+The `-e` points the install at the source files, so an edit takes effect without reinstalling.
+Someone who only wants to *run* this project rather than work on it can leave it out; see the
+course document *Running a project from GitHub*.
 
 ## Run
 

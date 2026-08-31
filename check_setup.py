@@ -72,8 +72,14 @@ def main():
             __import__(module)
             print(f"[PASS] import {module} (your package, installed)")
         except ImportError:
-            print(f"[FAIL] cannot import {module} — your package is not installed")
-            problems.append(f"your own package is not installed: run  pip install -e .")
+            # Two different situations, and telling them apart saves an afternoon: the package
+            # directory may not exist yet (expected until Week 3), or it exists and the install
+            # has not been run.
+            if not pathlib.Path("src", module).is_dir():
+                print(f"[WARN] no src/{module}/ yet — expected until Week 3, when you create it")
+            else:
+                print(f"[FAIL] cannot import {module} — run  pip install -e .")
+                problems.append("your own package is not installed: run  pip install -e .")
 
     print()
     if problems:
