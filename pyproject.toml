@@ -24,3 +24,12 @@ requires-python = ">=3.11"
 # Your code lives in src/<package>/, so that is where setuptools is told to look.
 [tool.setuptools.packages.find]
 where = ["src"]
+
+# Which linter rules `ruff check .` applies. E4/E7/E9 and F are ruff's own defaults minus the
+# line-length rule (syntax errors, logic errors, unused names); B adds bug-prone patterns such as
+# a mutable default argument or a zip() that could silently truncate; A catches names that shadow
+# Python builtins. Pinned here so that everyone — and CI, from Week 12 — gets the same report from
+# the same code. Week 5 explains all four families.
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "B", "A"]
+
